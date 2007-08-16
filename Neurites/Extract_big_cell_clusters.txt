@@ -1,0 +1,1 @@
+run("Analyze Particles...", "size=1000-Infinity circularity=0-1 show=Masks include");

@@ -1,0 +1,15 @@
+run("Subtract Background...", "rolling=5 light");
+setAutoThreshold();
+//run("Threshold...");
+setThreshold(0, 230);
+run("Convert to Mask");
+run("Fill Holes");
+run("Dilate");
+run("Erode");
+run("Fill Holes");
+run("Analyze Particles...", "size=100-Infinity circularity=00-1.00 show=Masks display clear");
+run("Erode");
+run("Dilate");
+run("Analyze Particles...", "size=300-Infinity circularity=0.00-1.00 show=Masks display clear");
+imageCalculator("Subtract create", "31507_46CNS_d13Diff_FGF_3K_p27-2.tif","Mask of Mask of 31507_46CNS_d13Diff_FGF_3K_p27-2.tif");
+//run("Image Calculator...", "image1=31507_46CNS_d13Diff_FGF_3K_p27-2.tif operation=Subtract image2=[Mask of Mask of 31507_46CNS_d13Diff_FGF_3K_p27-2.tif] create");

@@ -1,0 +1,25 @@
+// Filter out noise
+run("Analyze Particles...", "size=20-Infinity circularity=0.0-1.0 show=Masks");
+
+// Convert to lines
+run("Dilate");
+run("Skeletonize");
+
+// Annotate
+run("Analyze Particles...", "size=2-Infinity circularity=0.0-1.0 show=Outlines display clear");
+
+// Report
+var totalArea = 0;
+for (i = 0; i < nResults; i++) {
+  totalArea += getResult("Area", i);
+}
+print("\\Clear");
+print("Total number of Neurites: " + nResults);
+print("Total Length Neurites: " + totalArea);
+print("");
+print("Number of Cells: ???");
+print("Average area of cell body per Cell: ???");
+print("# Neurites per Cell: ???");
+print("Length Neurites per Cell: ???");
+print("Total Area Neurites: ???");
+print("Area Neurites per Cell: ???");

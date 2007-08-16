@@ -1,0 +1,19 @@
+run("Prepare neurite image");
+var orig = getImageID();
+
+// extract small cells
+selectImage(orig);
+run("Extract small cells");
+var smallCells = getImageID();
+
+// extract big cell clusters
+selectImage(orig);
+run("Extract big cell clusters");
+var clusters = getImageID();
+
+
+// extract neurites
+imageCalculator("subtract create", orig, smallCells);
+imageCalculator("subtract", getImageID(), clusters);
+
+run("Finalize neurites");

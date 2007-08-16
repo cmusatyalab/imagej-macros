@@ -1,0 +1,16 @@
+// Convert to grayscale
+run("8-bit");
+
+// Compensate for background illumination
+// (will benefit from calibration images)
+run("Fit Polynomial", "x=3 y=3 mixed=3");
+
+// Convert to black and white
+setAutoThreshold();
+run("Convert to Mask");
+var z;
+var hist = newArray(256);
+getStatistics(z, z, z, z, z, hist);
+if (hist[0] < hist[255]) {
+   run("Invert");
+}
