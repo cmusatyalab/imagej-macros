@@ -1,0 +1,16 @@
+setAutoThreshold();
+//run("Threshold...");
+setThreshold(10, 190);
+run("Analyze Particles...", "size=100-Infinity circularity=0.00-1.00 show=Masks display include add");
+run("Subtract Background...", "rolling=50 light");
+
+//run("Threshold...");
+
+run("Subtract Background...", "rolling=1000 light");
+
+
+setThreshold(10, 190);
+run("Convert to Mask");
+
+run("Analyze Particles...", "size=100-Infinity circularity=0.00-1.00 show=Outlines display add");
+

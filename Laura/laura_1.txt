@@ -1,0 +1,8 @@
+run("MultiThresholder", "Mixture Modeling");
+run("MultiThresholder", "mixture");
+setThreshold(10, 170);
+run("MultiThresholder", "Mixture Modeling apply");
+setAutoThreshold();
+//run("Threshold...");
+run("Analyze Particles...", "size=100-Infinity circularity=0.00-1.00 show=Masks display add");
+run("Fill Holes");

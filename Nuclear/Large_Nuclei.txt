@@ -1,0 +1,13 @@
+run("Colour Deconvolution", "vectors=H&E");
+close();
+close();
+run("8-bit");
+setAutoThreshold();
+//run("Threshold...");
+setThreshold(0, 118);
+run("Convert to Mask");
+setThreshold(255, 255);
+run("Despeckle");
+run("Fill Holes");
+run("Erode");
+run("Analyze Particles...", "size=400-Infinity circularity=0.50-1.00 show=Outlines display clear include summarize record");

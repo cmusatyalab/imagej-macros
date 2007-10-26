@@ -1,0 +1,5 @@
+setAutoThreshold();
+//run("Threshold...");
+setThreshold(10, 190);
+run("Analyze Particles...", "size=100-Infinity circularity=0.00-1.00 show=Masks display include add");
+run("Fill Holes");

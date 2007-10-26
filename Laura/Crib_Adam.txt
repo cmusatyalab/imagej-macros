@@ -1,0 +1,21 @@
+var win = getTitle();
+var hWin = win + " (Colour[1])";
+var eWin = win + " (Colour[2])";
+
+run("Colour Deconvolution", "vectors=H&E");
+
+selectWindow("Colour Deconvolution");
+close();
+
+selectWindow(win + " (Colour[3])");
+close;
+
+
+// pick hWin or eWin here
+selectWindow(hWin);
+
+run("MultiThresholder", "IsoData");
+run("MultiThresholder", "isodata");
+run("MultiThresholder", "IsoData apply");
+run("Invert");
+run("Analyze Particles...", "size=30-Infinity circularity=0.00-1.00 show=Nothing exclude clear add");

@@ -1,0 +1,9 @@
+run("Colour Deconvolution", "vectors=H&E");
+close();
+close();
+run("8-bit");
+setAutoThreshold();
+//run("Threshold...");
+setThreshold(0, 155);
+run("Convert to Mask");
+run("Analyze Particles...", "size=10-Infinity circularity=0.00-1.00 show=Masks display clear include summarize");

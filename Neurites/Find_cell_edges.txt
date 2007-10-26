@@ -1,0 +1,12 @@
+run("Fit Polynomial", "x=2 y=2 mixed=0");
+run("8-bit");
+
+var area;
+var mean;
+var min;
+var max;
+var std;
+getStatistics(area, mean, min, max, std);
+
+setThreshold(mean + 1.2 * std, 255);
+run("Convert to Mask");

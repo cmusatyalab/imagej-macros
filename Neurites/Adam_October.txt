@@ -1,0 +1,153 @@
+// setup
+var orig = getImageID();
+run("Duplicate...", "title=Orig");
+var origDup = getImageID();
+run("Duplicate...", "title=Result");
+var result = getImageID();
+run("Set Measurements...", "area center perimeter bounding fit circularity area_fraction redirect=None decimal=3");
+
+// account for background illumination
+selectImage(origDup);
+run("Fit Polynomial", "x=2 y=2 mixed=2");
+
+// duplicate
+run("Duplicate...", "title=Duplicate");
+var dup = getImageID();
+run("Duplicate...", "title=Duplicate2");
+var dup2 = getImageID();
+
+selectImage(origDup);
+close();
+
+// process cells
+selectImage(dup);
+run("MultiThresholder", "IsoData apply");
+run("Watershed");
+run("Analyze Particles...", "size=10-200 circularity=0.20-1.00 show=Masks include clear record");
+
+// record info about cells
+var numCells = nResults;
+var totalCellArea = 0;
+for (i = 0; i < nResults; i++) {
+  totalCellArea += getResult("Area", i);
+}
+
+// rename mask and collect selection
+rename("Cells");
+var cellMask = getImageID();
+run("Create Selection");
+
+// close
+selectImage(dup);
+close();
+
+
+// mask out cells in order to process neurites
+selectImage(dup2);
+run("Restore Selection");
+run("Enlarge...", "enlarge=3");
+run("Make Inverse");
+
+//run("MultiThresholder", "IsoData apply");
+setAutoThreshold();
+run("Convert to Mask");
+
+run("Restore Selection");
+
+// possibly invert (depends on what autothreshold has done)
+var z;
+var hist = newArray(256);
+getStatistics(z, z, z, z, z, hist);
+if (hist[0] < hist[255]) {
+   run("Invert");
+}
+
+// find the neurites
+run("Analyze Particles...", "size=30-2000 circularity=0.00-0.70 show=Masks clear record");
+
+// record info about neurites
+var numNeurites = nResults;
+var totalNeuriteArea = 0;
+for (i = 0; i < nResults; i++) {
+  totalNeuriteArea += getResult("Area", i);
+}
+
+
+
+// rename mask
+rename("Neurites");
+var neuriteMask = getImageID();
+
+// close
+selectImage(dup2);
+close();
+
+
+// combine 2 images into stack
+newImage("Masks", "8-bit", getWidth(), getHeight(), 2);
+run("Invert LUT");
+var maskStack = getImageID();
+
+selectImage(cellMask);
+run("Select All");
+run("Copy");
+close();
+
+selectImage(maskStack);
+setSlice(1);
+run("Paste");
+
+selectImage(neuriteMask);
+run("Select All");
+run("Copy");
+close();
+
+selectImage(maskStack);
+setSlice(2);
+run("Paste");
+
+
+// convert stack to RGB
+run("Convert Stack to RGB");
+var masksRGB = getImageID();
+
+// paste over original, as a slice
+selectImage(result);
+run("RGB Color");
+run("Add Slice");
+run("Add Slice");
+setSlice(1);
+run("Copy");
+setSlice(2);
+run("Paste");
+
+selectImage(masksRGB);
+run("Copy");
+
+selectImage(result);
+setSlice(3);
+run("Paste");
+setSlice(2);
+imageCalculator("and slice", result, masksRGB);
+
+
+// clean up
+selectImage(maskStack);
+close();
+selectImage(masksRGB);
+close();
+selectImage(result);
+run("Select None");
+
+
+
+// report
+print("\\Clear");
+print("Total number of Neurites: " + numNeurites);
+print("Total Length Neurites: " + totalCellArea);
+print("Number of Cells: " + numCells);
+print("Average area of cell body per Cell: " + totalCellArea / numCells);
+print("# Neurites per Cell: " + numNeurites / numCells);
+print("Length Neurites per Cell: ???");
+print("Total Area Neurites: " + totalNeuriteArea);
+print("Area Neurites per Cell: " + totalNeuriteArea / numCells);
