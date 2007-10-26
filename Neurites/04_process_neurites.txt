@@ -1,0 +1,1 @@
+run("Analyze Particles...", "size=30-2000 circularity=0.00-0.70 show=Masks clear record add");

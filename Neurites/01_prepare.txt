@@ -1,0 +1,15 @@
+run("Duplicate...", "title=Orig");
+var origDup = getImageID();
+run("Duplicate...", "title=Result");
+run("Set Measurements...", "area center perimeter bounding fit circularity area_fraction redirect=None decimal=3");
+
+// account for background illumination
+selectImage(origDup);
+run("Fit Polynomial", "x=2 y=2 mixed=2");
+
+// duplicate
+run("Duplicate...", "title=Duplicate");
+run("Duplicate...", "title=Duplicate2");
+
+selectImage(origDup);
+close();

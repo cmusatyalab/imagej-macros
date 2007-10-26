@@ -1,0 +1,16 @@
+run("Restore Selection");
+run("Enlarge...", "enlarge=3");
+run("Make Inverse");
+
+//run("MultiThresholder", "IsoData apply");
+setAutoThreshold();
+run("Convert to Mask");
+
+run("Restore Selection");
+
+var z;
+var hist = newArray(256);
+getStatistics(z, z, z, z, z, hist);
+if (hist[0] < hist[255]) {
+   run("Invert");
+}

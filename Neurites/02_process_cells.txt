@@ -1,0 +1,3 @@
+run("MultiThresholder", "IsoData apply");
+run("Watershed");
+run("Analyze Particles...", "size=10-200 circularity=0.20-1.00 show=Masks include clear record add");
