@@ -1,0 +1,108 @@
+var dir = getDirectory("Choose a Directory ");
+var list = getFileList(dir);
+
+run("Set Measurements...", "area center perimeter bounding fit circularity area_fraction redirect=None decimal=3");
+
+//print("\\Clear");
+
+print("name,total.number.of.neurites,total.length.neurites,number.of.cells,average.area.of.cell.body.per.cell,neurites.per.cell,length.neurites.per.cell,total.area.neurites,area.neurites.per.cell");
+
+
+setBatchMode(true);
+
+for (var file=0; file<list.length; file++) {
+  var path = dir+list[file];
+  showProgress(file, list.length);
+  if (endsWith(path,".TIF")) {
+    open(path);
+    doit(list[file]);
+  }
+ }
+
+
+
+
+function doit(name) {
+
+    // setup
+    var orig = getImageID();
+
+    // account for background illumination
+    run("Fit Polynomial", "x=2 y=2 mixed=2");
+
+    // duplicate
+    run("Duplicate...", "title=Duplicate");
+    var dup = getImageID();
+    run("Duplicate...", "title=Duplicate2");
+    var dup2 = getImageID();
+
+    selectImage(orig);
+    close();
+
+    // process cells
+    selectImage(dup);
+    run("MultiThresholder", "IsoData apply");
+    run("Watershed");
+    run("Analyze Particles...", "size=10-200 circularity=0.20-1.00 show=Masks include clear record");
+
+    // record info about cells
+    var numCells = nResults;
+    if (numCells == 0) {
+      exit("numCells is 0");
+    }
+
+    var totalCellArea = 0;
+    for (i = 0; i < nResults; i++) {
+      totalCellArea += getResult("Area", i);
+    }
+
+    // rename mask and collect selection
+    rename("Cells");
+    var cellMask = getImageID();
+    run("Create Selection");
+
+    // close
+    selectImage(dup);
+    close();
+
+
+    // mask out cells in order to process neurites
+    selectImage(dup2);
+    run("Restore Selection");
+    run("Enlarge...", "enlarge=3");
+    run("Make Inverse");
+
+    //run("MultiThresholder", "IsoData apply");
+    setAutoThreshold();
+    run("Convert to Mask");
+
+    run("Restore Selection");
+
+    // possibly invert (depends on what autothreshold has done)
+    var z;
+    var hist = newArray(256);
+    getStatistics(z, z, z, z, z, hist);
+    if (hist[0] < hist[255]) {
+      run("Invert");
+    }
+
+    // find the neurites
+    run("Analyze Particles...", "size=30-2000 circularity=0.00-0.70 show=Nothing clear record");
+
+    // record info about neurites
+    var numNeurites = nResults;
+    var totalNeuriteArea = 0;
+    for (i = 0; i < nResults; i++) {
+      totalNeuriteArea += getResult("Area", i);
+    }
+
+    // close
+    selectImage(dup2);
+    close();
+    selectImage(cellMask);
+    close();
+
+
+    // report
+    print(name + "," + numNeurites + "," + totalCellArea + "," + numCells + "," + (totalCellArea / numCells) + "," + (numNeurites / numCells) + ",," + totalNeuriteArea + "," + (totalNeuriteArea / numCells));
+}
