@@ -81,14 +81,13 @@ close();
 
 
 // report
-call("ijloader.writeDiamondAttribute", "name", name);
-call("ijloader.writeDiamondAttribute", "total.number.of.neurites", numNeurites);
-call("ijloader.writeDiamondAttribute", "total.length.neurites", totalCellArea);
-call("ijloader.writeDiamondAttribute", "number.of.cells,", numCells);
-call("ijloader.writeDiamondAttribute", "average.area.of.cell.body.per.cell", (totalCellArea / numCells));
-call("ijloader.writeDiamondAttribute", "neurites.per.cell", (numNeurites / numCells));
-call("ijloader.writeDiamondAttribute", "length.neurites.per.cell", "");
-call("ijloader.writeDiamondAttribute", "total.area.neurites", totalNeuriteArea);
-call("ijloader.writeDiamondAttribute", "area.neurites.per.cell", (totalNeuriteArea / numCells));
+call("ijloader.IJLoader.writeDiamondAttribute", "total.number.of.neurites", numNeurites);
+call("ijloader.IJLoader.writeDiamondAttribute", "total.length.neurites", totalCellArea);
+call("ijloader.IJLoader.writeDiamondAttribute", "number.of.cells,", numCells);
+call("ijloader.IJLoader.writeDiamondAttribute", "average.area.of.cell.body.per.cell", (totalCellArea / numCells));
+call("ijloader.IJLoader.writeDiamondAttribute", "neurites.per.cell", (numNeurites / numCells));
+call("ijloader.IJLoader.writeDiamondAttribute", "length.neurites.per.cell", "");
+call("ijloader.IJLoader.writeDiamondAttribute", "total.area.neurites", totalNeuriteArea);
+call("ijloader.IJLoader.writeDiamondAttribute", "area.neurites.per.cell", (totalNeuriteArea / numCells));
 
 run("Diamond Filter", "expr=1.0");
