@@ -10,4 +10,22 @@ setThreshold(255, 255);
 run("Despeckle");
 run("Fill Holes");
 run("Erode");
-run("Analyze Particles...", "size=150-Infinity circularity=0.50-1.00 show=Outlines display clear include summarize record");
+run("Analyze Particles...", "size=150-Infinity circularity=0.50-1.00 show=Nothing clear include summarize record");
+
+// compute area fraction
+var w = getWidth();
+var h = getHeight();
+
+var area = w * h;
+
+var tArea = 0;
+var i;
+for (i = 0; i < nResults; i++) {
+  tArea += getResult("Area", i);
+}
+
+//print("tArea: " + tArea);
+//print("area: " + area);
+var areaFrac = (tArea / area * 100.0);   // area fraction in percent
+
+run("Diamond Filter", "expr=" + (areaFrac * 10000));
