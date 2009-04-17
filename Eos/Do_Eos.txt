@@ -1,0 +1,23 @@
+var orig = getImageID();
+
+run("Find E");
+var e = getImageID();
+
+selectImage(orig);
+
+run("Find Nuclei");
+var n = getImageID();
+
+selectImage(orig);
+close();
+
+imageCalculator("AND create", e, n);
+rename("Result");
+save("result.tif");
+
+while (nImages>0) {
+  selectImage(nImages);
+  close();
+}
+
+run("Quit");
