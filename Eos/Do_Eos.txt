@@ -1,5 +1,10 @@
 var orig = getImageID();
 
+run("Find DOG Texture", "features=32,21.75,23.0,14.75,20.75,21.46875,16.484375,16.45703125,14.99609375,11.5078125,11.224609375,10.1923828125,8.4130859375");
+var t = getImageID();
+
+selectImage(orig);
+
 run("Find E");
 var e = getImageID();
 
@@ -12,6 +17,9 @@ selectImage(orig);
 close();
 
 imageCalculator("AND create", e, n);
+var ii = getImageID();
+
+imageCalculator("AND create", ii, t);
 rename("Result");
 save("result.tif");
 
