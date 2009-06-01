@@ -24,13 +24,13 @@ rename("1");
 selectWindow("Brightness");
 rename("2");
 min[0]=0;
-max[0]=185;
+max[0]=190;
 filter[0]="pass";
 min[1]=93;
 max[1]=255;
 filter[1]="pass";
 min[2]=0;
-max[2]=134;
+max[2]=160;
 filter[2]="pass";
 for (i=0;i<3;i++){
   selectWindow(""+i);
