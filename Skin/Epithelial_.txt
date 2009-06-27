@@ -1,31 +1,34 @@
 var orig = getImageID();
 
-run("Scale...", "x=.25 y=.25 interpolation=None create");
+var scale = 4;
+var scaleDown = 1/scale;
+
+run("Scale...", "x=" + scaleDown + " y=" + scaleDown + " interpolation=None create");
 run("8-bit");
-run("MultiThresholder", "IsoData apply");
-run("Convert to Mask");
+//run("MultiThresholder", "IsoData apply");
+run("Auto Threshold", "method=IsoData white");
+run("Invert")
 run("Open");
-run("Invert");
-run("Scale...", "x=4 y=4 interpolation=None create");
-run("Set Measurements...", "area redirect=None decimal=3");
+run("Scale...", "x=" + scale + " y=" + scale + " interpolation=None create");
+run("Invert")
+run("Set Measurements...", "area mean redirect=None decimal=3");
 run("Analyze Particles...", "size=0-Infinity circularity=0.00-1.00 show=Masks display clear include record");
 
 var area = 0;
-var areai;
 var i;
 for (i = 0; i < nResults; i++) {
   var a = getResult("Area", i);
   if (a > area) {
     area = a;
-    areai = i;
+    x = getResult("XStart", i);
+    y = getResult("YStart", i);
+    doWand(x, y);
   }
 }
 
-var xs = getResult("XStart", areai);
-var ys = getResult("YStart", areai);
-doWand(xs, ys);
 run("Clear Outside");
 run("Fill");
 
 selectImage(orig);
 run("Restore Selection");
+
