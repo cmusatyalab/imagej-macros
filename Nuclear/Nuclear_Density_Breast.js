@@ -26,4 +26,4 @@ for (i = 0; i < rt.getCounter(); i++) {
 var areaFrac = (tArea / area * 100.0);   // area fraction in percent
 print("areaFrac: " + areaFrac);
 
-IJ.run("Diamond Filter", "expr=" + (areaFrac * 10000));
+IJ.run("Diamond Filter", "expr=" + (areaFrac * 100));
